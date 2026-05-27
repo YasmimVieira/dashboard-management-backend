@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database/database/database.module';
 import { AuthModule } from './auth/auth/auth.module';
+import { UsersService } from './users/users.service';
+import { AuthService } from './auth/auth.service';
 import { ItemsService } from './items/items/items.service';
 import { ItemsController } from './items/items/items.controller';
 import { Controller } from './items/.controller';
@@ -20,6 +22,6 @@ import { AuthModule } from './auth/auth/auth.module';
 @Module({
   imports: [AuthModule, DatabaseModule, UsersModule, ItemsModule],
   controllers: [AppController, ItemsController, Controller],
-  providers: [AppService, AuthService, ItemsService, ServiceService],
+  providers: [AppService, AuthService, ItemsService, ServiceService, UsersService],
 })
 export class AppModule {}
