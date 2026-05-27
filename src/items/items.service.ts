@@ -1,53 +1,36 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { UsersService } from 'src/users/users.service';
-import * as bcrypt from 'bcryptjs';
-import { Auth } from 'src/models/auth.model';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Items } from './items.entity';
+import { CreateItemDto } from './item.dto';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ItemsService {
     constructor(
-        private readonly userService: UsersService,
-        private readonly jwtService: JwtService,
+        @InjectRepository(Items)
+        private readonly itemsRepository: Repository<Items>,
     ) {}
 
-    async login(auth: Auth) {
-        const user = await this.userService.findByEmail(auth.email);
-
-        if (!user || !await bcrypt.compare(auth.password, user.password)) {
-            throw new UnauthorizedException('Invalid credentials');
-        }
-
-        const payload = { email: user.email, sub: user.id };
-        const acess_token = this.jwtService.sign(payload);
-        const refresh_token = this.jwtService.sign(payload, { expiresIn: '7d' });
-
-        return { 
-            acess_token,
-            refresh_token,
-            user: {
-                id: user.id,
-                email: user.email,
-                isActive: user.isActive,
-            }
-        };
+    async create(create: CreateItemDto) {
+        const item = this.itemsRepository.create(create);
+        return this.itemsRepository.save(item);
     }
 
-    async register(authRegister: Auth) {
-        const hashedPassword = await bcrypt.hash(authRegister.password, 10);
-        return this.userService.create({
-            email: authRegister.email,
-            password: hashedPassword,
-            name: authRegister.name,
-        });
+    async findAll() {
+        return this.itemsRepository.find();
     }
 
-    async validateToken(token: string) {
-        try {
-            return this.jwtService.verify(token);
-        } catch (error) {
-            throw new UnauthorizedException('Invalid token');
-        }
+    async findOne(id: string) {
+        return this.itemsRepository.findOneBy({ id });
+    }
+    
+    async update(id: string, update: Partial<CreateItemDto>) {
+        await this.itemsRepository.update(id, update);
+        return this.findOne(id);
+    }
+
+    async remove(id: string) {
+        await this.itemsRepository.delete(id);
     }
 }
 
