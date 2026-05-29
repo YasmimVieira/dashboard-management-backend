@@ -3,16 +3,18 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcryptjs';
 import { Auth } from 'src/models/auth.model';
+import { UsersRepository } from 'src/users/users.repository';
 
 @Injectable()
 export class AuthService {
     constructor(
         private readonly userService: UsersService,
+        private readonly userRepository: UsersRepository,
         private readonly jwtService: JwtService,
     ) {}
 
     async login(auth: Auth) {
-        const user = await this.userService.findByEmail(auth.email);
+        const user = await this.userRepository.findByEmail(auth.email);
 
         if (!user || !await bcrypt.compare(auth.password, user.password)) {
             throw new UnauthorizedException('Invalid credentials');
@@ -38,7 +40,7 @@ export class AuthService {
         return this.userService.create({
             email: authRegister.email,
             password: hashedPassword,
-            name: authRegister.name,
+            name: authRegister.name ?? '',
         });
     }
 

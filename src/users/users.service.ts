@@ -1,14 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { UsersRepository } from './users.repository';
-import { User } from './entity.user';
-import bcrypt from 'node_modules/bcryptjs/umd/types';
+import * as bcrypt from 'bcryptjs';
+
+type CreateUserDto = { email: string; password: string; name?: string };
 
 @Injectable()
 export class UsersService {
 
     constructor(private readonly usersRepository: UsersRepository) {}
 
-    async create(createUserDto: User) {
+    async create(createUserDto: CreateUserDto) {
         const existingUser = await this.usersRepository.findByEmail(createUserDto.email);
         if (existingUser) {
             throw new Error('Email já cadastrado');
@@ -19,7 +20,6 @@ export class UsersService {
         return this.usersRepository.create({
             ...createUserDto,
             password: hashedPassword,
-            role: 'user'
         });
     }
 

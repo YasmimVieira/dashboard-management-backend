@@ -1,5 +1,7 @@
+import { DeepPartial } from 'typeorm';
+
 export interface IRepository<T, ID = string> {
-  create(data: Omit<T, 'id'>): Promise<T>;
+  create(data: DeepPartial<T>): Promise<T>;
   findAll(): Promise<T[]>;
   findById(id: ID): Promise<T | null>;
   findBy(criteria: Partial<T>): Promise<T[]>;

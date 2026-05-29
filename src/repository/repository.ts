@@ -10,7 +10,7 @@ export class TypeORMRepository<T extends ObjectLiteral, ID = string>
     this.repository = repository;
   }
 
-  async create(data: Omit<T, 'id'>): Promise<T> {
+  async create(data: DeepPartial<T>): Promise<T> {
     const entity = this.repository.create(data as DeepPartial<T>);
     return this.repository.save(entity);
   }
