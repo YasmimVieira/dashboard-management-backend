@@ -8,7 +8,7 @@ export class CreateItemDto {
   email!: string;
 
   @IsEnum(['active', 'pending', 'inactive'])
-  status1!: string;
+  status!: string;
 
   @IsOptional()
   @IsEnum(['low', 'medium', 'high'])

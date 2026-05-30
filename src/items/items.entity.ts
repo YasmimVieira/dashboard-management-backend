@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('items')
 export class Items {
@@ -23,9 +23,9 @@ export class Items {
     @Column({ type: 'timestamp', nullable: true })
     dueDate!: Date | null;
 
-    @Column()
+    @CreateDateColumn()
     createdAt!: Date;
-    
-    @Column()
+
+    @UpdateDateColumn()
     updatedAt!: Date;
 }
