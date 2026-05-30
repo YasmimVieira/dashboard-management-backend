@@ -16,13 +16,14 @@ import { Items } from './items/items.entity';
 import { User } from './users/entity.user';
 import { appConfig } from './config/app.config';
 import { typeOrmConfig } from './config/database.config';
+import { TypedConfigService } from './config/typed.service';
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService<ConfigType>) => ({
+      useFactory: (configService: TypedConfigService) => ({
         ...configService.get('database'),
         entities: [Items, User],
       }),
@@ -40,8 +41,8 @@ import { typeOrmConfig } from './config/database.config';
   providers: [
     AppService,
     {
-      provide: ConfigService,
-      useExisting: ConfigService<ConfigType>,
+      provide: TypedConfigService,
+      useExisting: ConfigService,
     }
 
   ],
