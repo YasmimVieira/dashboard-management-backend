@@ -5,11 +5,8 @@ export const typeOrmConfig = registerAs(
   'database',
   (): TypeOrmModuleOptions => ({
     type: 'postgres',
-    host: process.env.DATABASE_HOST,
-    port: parseInt(process.env.DATABASE_PORT ?? '5432'),
-    username: process.env.DATABASE_NAME,
-    password: process.env.DATABASE_PASSWORD,
-    synchronize: Boolean(process.env.DATABASE_SYNC ?? false),
+    url: process.env.DATABASE_URL,
+    synchronize: process.env.DB_SYNC === 'true',
     ssl: {
       rejectUnauthorized: false,
     },
