@@ -6,7 +6,7 @@ export const typeOrmConfig = registerAs(
   (): TypeOrmModuleOptions => ({
     type: 'postgres',
     url: process.env.DATABASE_URL,
-    synchronize: process.env.DB_SYNC === 'true',
+    synchronize: process.env.DB_SYNC === 'true', 
     ssl: {
       rejectUnauthorized: false,
     },
