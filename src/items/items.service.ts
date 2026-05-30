@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Items } from './items.entity';
 import { CreateItemDto } from './item.dto';
@@ -21,7 +21,11 @@ export class ItemsService {
     }
 
     async findOne(id: string) {
-        return this.itemsRepository.findOneBy({ id });
+        const item = await this.itemsRepository.findOneBy({ id });
+        if (!item) {
+            throw new NotFoundException('Item não encontrado');
+        }
+        return item;
     }
     
     async update(id: string, update: Partial<CreateItemDto>) {

@@ -25,11 +25,11 @@ export class AuthService {
         }
 
         const payload = { email: user.email, sub: user.id };
-        const acess_token = this.jwtService.sign(payload);
+        const access_token = this.jwtService.sign(payload);
         const refresh_token = this.jwtService.sign(payload, { expiresIn: '7d' });
 
-        return { 
-            acess_token,
+        return {
+            access_token,
             refresh_token,
             user: {
                 id: user.id,
@@ -44,10 +44,9 @@ export class AuthService {
             throw new BadRequestException('Email and password are required');
         }
 
-        const hashedPassword = await bcrypt.hash(authRegister.password, 10);
         return this.userService.create({
             email: authRegister.email,
-            password: hashedPassword,
+            password: authRegister.password,
             name: authRegister.name ?? '',
         });
     }

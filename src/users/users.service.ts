@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { UsersRepository } from './users.repository';
 import * as bcrypt from 'bcryptjs';
 
@@ -12,7 +12,7 @@ export class UsersService {
     async create(createUserDto: CreateUserDto) {
         const existingUser = await this.usersRepository.findByEmail(createUserDto.email);
         if (existingUser) {
-            throw new Error('Email já cadastrado');
+            throw new ConflictException('Email já cadastrado');
         }
 
         const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
@@ -26,14 +26,14 @@ export class UsersService {
     async findOne(id: string) {
         const user = await this.usersRepository.findById(id);
         if (!user) {
-            throw new Error('Usuário não encontrado');
+            throw new NotFoundException('Usuário não encontrado');
         }
 
         return user;
     }
 
     async findByEmailWithPassword(email: string) {
-        const user = await this.usersRepository.findByEmailWithPassword(email);
+        return this.usersRepository.findByEmailWithPassword(email);
     }
 
     async saveRefreshToken(id: string, token: string) {

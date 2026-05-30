@@ -2,7 +2,7 @@ import { jest, describe, beforeEach, it, expect} from '@jest/globals';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ItemsService } from './items.service';
 import { Items } from './items.entity';
-import { CreateItems } from './items.dto';
+import { CreateItemDto } from './item.dto';
 import { Repository } from 'typeorm';
 
 describe('ItemsService', () => {
@@ -38,7 +38,7 @@ describe('ItemsService', () => {
 
   describe('create', () => {
     it('should create a new item with valid data', async () => {
-      const createItemDto: CreateItems = {
+      const createItemDto: CreateItemDto = {
         name: 'Test Item',
         email: 'test@example.com',
         status: 'active',
@@ -65,7 +65,7 @@ describe('ItemsService', () => {
     });
 
     it('should fail with invalid email', async () => {
-      const createItemDto: CreateItems = {
+      const createItemDto: CreateItemDto = {
         name: 'Test Item',
         email: 'invalid-email',
         status: 'active',
