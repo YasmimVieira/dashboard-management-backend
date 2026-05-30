@@ -1,5 +1,5 @@
-export interface Auth {
-    email: string;
-    password: string;
+export class Auth {
+    email!: string;
+    password!: string;
     name?: string;
 }
