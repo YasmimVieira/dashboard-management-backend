@@ -36,7 +36,7 @@ export class AuthService {
     }
 
     async register(authRegister: Auth) {
-        const hashedPassword = await bcrypt.hash(authRegister.password, 10);
+        const hashedPassword = await bcrypt.hash(authRegister?.password, 10);
         return this.userService.create({
             email: authRegister.email,
             password: hashedPassword,
