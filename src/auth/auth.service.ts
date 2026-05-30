@@ -44,11 +44,26 @@ export class AuthService {
             throw new BadRequestException('Email and password are required');
         }
 
-        return this.userService.create({
+        const user = await this.userService.create({
             email: authRegister.email,
             password: authRegister.password,
             name: authRegister.name ?? '',
         });
+
+        const payload = { email: user.email, sub: user.id };
+        const access_token = this.jwtService.sign(payload);
+        const refresh_token = this.jwtService.sign(payload, { expiresIn: '7d' });
+
+        return {
+            access_token,
+            refresh_token,
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                isActive: user.isActive,
+            },
+        };
     }
 
     async validateToken(token: string) {
